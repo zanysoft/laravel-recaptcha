@@ -12,22 +12,29 @@ Available reCAPTCHA versions:
 
 
 | PHP version    | Laravel version |
-|----------------|-----------------|
+| ---------------- | ----------------- |
 | 7.0 or greater | 6.0 or greater  |
 
 ## Composer
 
 You can install the package via composer:
 
-$ composer require zanysoft/laravel-recaptcha:^1.0
+```
+$ composer require zanysoft/laravel-recaptcha
+```
+
 Laravel 6.0 or greater uses package auto-discovery, so doesn't require you to manually add the Service Provider, but if you don't use auto-discovery ReCaptchaServiceProvider must be registered in `config/app.php`:
+
 ```
 'providers' => [
 ...
 ZanySoft\ReCaptcha\ReCaptchaServiceProvider::class,
 ];
+```
+
 You can use the facade for shorter code. Add ReCaptcha to your aliases:
 
+```
 'aliases' => [
 ...
 'ReCaptcha' => ZanySoft\ReCaptcha\Facades\ReCaptcha::class,
@@ -44,11 +51,13 @@ Set the environment
 Add your API Keys
 Open `.env` file and set `RECAPTCHA_SITE_KEY` and `RECAPTCHA_SECRET_KEY`:
 
-# in your .env file
+# In your .env file
+
 ```
 RECAPTCHA_SITE_KEY=YOUR_API_SITE_KEY
 RECAPTCHA_SECRET_KEY=YOUR_API_SECRET_KEY
 ```
+
 Complete configuration
 Open `config/recaptcha.php` configuration file and set version:
 
@@ -62,6 +71,7 @@ return [
     'token_parameter_name' => env('RECAPTCHA_TOKEN_PARAMETER_NAME', 'token')
 ];
 ```
+
 `site_key` and `secret_key` are reCAPTCHA keys you have to create in order to perform Google API authentication. For more information about Site Key and Secret Key please visit Google reCAPTCHA developer documentation
 
 `version` indicates the reCAPTCHA version (supported: v3|v2|invisible). Get more info about reCAPTCHA version at https://developers.google.com/recaptcha/docs/versions.
@@ -75,7 +85,10 @@ return [
 Reload config cache file
 !!! IMPORTANT !!! Every time you change some configuration run the following shell command:
 
+```
 $ php artisan config:cache
+```
+
 Have you updated?
 If you are migrating from an older version add `skip_ip` array in `recaptcha.php` configuration file.
 
@@ -84,10 +97,12 @@ Just for _v2_ and _invisible_ users.
 
 Before starting please add the validation message to resources/lang/[LANG]/validation.php file
 
+```
 return [
 ...
 'recaptcha' => 'The :attribute is wrong!',
 ];
+```
 
 # How to use v2
 
@@ -291,7 +306,7 @@ The result should be something like that:
         function callbackThen(response){
             // read HTTP status
             console.log(response.status);
-      
+    
             // read Promise object
             response.json().then(function(data){
                 console.log(data);

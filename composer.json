@@ -1,45 +1,41 @@
 {
-    "name": "zanysoft/laravel-recaptcha",
-    "description": "Advanced Google reCAPTCHA package for Laravel",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "ZanySoft",
-            "email": "info@zanysoft.net"
-        }
-    ],
-    "keywords": [
-        "laravel",
-        "Google",
-        "reCAPTCHA",
-        "Google reCAPTCHA",
-        "laravel reCAPTCHA"
-    ],
-    "require": {
-        "php": "^7.2|^7.3|^8.0",
-        "illuminate/support": "^6.0|^7.0|^8.0|^9.0"
-    },
-    "require-dev": {},
-    "autoload": {
-        "psr-4": {
-            "ZanySoft\\ReCaptcha\\": "src/"
-        },
-        "files": [
-            "src/app/Helpers/functions.php"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {}
-    },
-    "scripts": {},
-    "extra": {
-        "laravel": {
-            "providers": [
-                "ZanySoft\\ReCaptcha\\ReCaptchaServiceProvider"
-            ],
-            "aliases": {
-                "ReCaptcha": "ZanySoft\\ReCaptcha\\Facades\\ReCaptcha"
-            }
-        }
+  "name": "zanysoft/laravel-recaptcha",
+  "description": "Advanced Google reCAPTCHA package for Laravel",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ZanySoft",
+      "email": "info@zanysoft.net"
     }
+  ],
+  "keywords": [
+    "laravel",
+    "Google",
+    "reCAPTCHA",
+    "Google reCAPTCHA",
+    "laravel reCAPTCHA"
+  ],
+  "require": {
+    "php": "^7.2|^7.3|^8.0",
+    "illuminate/support": "^6.0|^7.0|^8.0|^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ZanySoft\\ReCaptcha\\": "src/"
+    },
+    "files": [
+      "src/app/Helpers/functions.php"
+    ]
+  },
+  "scripts": {},
+  "extra": {
+    "laravel": {
+      "providers": [
+        "ZanySoft\\ReCaptcha\\ReCaptchaServiceProvider"
+      ],
+      "aliases": {
+        "ReCaptcha": "ZanySoft\\ReCaptcha\\Facades\\ReCaptcha"
+      }
+    }
+  }
 }
