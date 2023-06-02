@@ -7,13 +7,10 @@
 
 namespace ZanySoft\ReCaptcha;
 
-use ZanySoft\ReCaptcha\app\Rules\ReCaptchaRule;
-use ZanySoft\ReCaptcha\Service\ReCaptchaInvisible;
-use ZanySoft\ReCaptcha\Service\ReCaptchaV2;
-use ZanySoft\ReCaptcha\Service\ReCaptchaV3;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use ZanySoft\ReCaptcha\app\Rules\ReCaptchaRule;
 
 class ReCaptchaServiceProvider extends ServiceProvider
 {
@@ -90,21 +87,7 @@ class ReCaptchaServiceProvider extends ServiceProvider
     protected function registerReCaptchaService()
     {
         $this->app->singleton('recaptcha', function ($app) {
-            $recaptchaClass = '';
-
-            switch (config('recaptcha.version')) {
-                case 'v3' :
-                    $recaptchaClass = ReCaptchaV3::class;
-                    break;
-                case 'v2' :
-                    $recaptchaClass = ReCaptchaV2::class;
-                    break;
-                case 'invisible':
-                    $recaptchaClass = ReCaptchaInvisible::class;
-                    break;
-            }
-
-            return new $recaptchaClass(config('recaptcha.site_key'), config('recaptcha.secret_key'), config('recaptcha.lang'));
+            return new ReCaptcha();
         });
     }
 }

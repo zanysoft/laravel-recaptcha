@@ -23,18 +23,18 @@ return [
     'secret_key' => env('RECAPTCHA_SECRET_KEY', ''),
 
     /*
-     * The language code
-     * Get more info @ https://developers.google.com/recaptcha/docs/versions
-     */
-    'lang' => 'en',
-
-    /*
      * ReCATCHA version
      * Supported: "v2", "invisible", "v3",
      *
      * Get more info @ https://developers.google.com/recaptcha/docs/versions
      */
     'version' => env('RECAPTCHA_VERSION', 'v2'),
+
+    /*
+     * The language code
+     * Get more info @ https://developers.google.com/recaptcha/docs/versions
+     */
+    'lang' => 'en',
 
     /*
      * IP addresses for which validation will be skipped
@@ -44,10 +44,15 @@ return [
     /*
      * Default route called to check the Google reCAPTCHA token
      */
-    'validation_route' => env('RECAPTCHA_VALIDATION_ROUTE', 'laravel-recaptcha/validate'),
+    'validation_route' => 'laravel-recaptcha/validate',
 
     /*
      * The name of the parameter used to send Google reCAPTCHA token to verify route
      */
-    'token_parameter_name' => env('RECAPTCHA_TOKEN_PARAMETER_NAME', 'token'),
+    'token_parameter_name' => 'token',
+
+    /*
+     * The color theme of the widget for v2 only.
+     */
+    'theme' => 'light',
 ];

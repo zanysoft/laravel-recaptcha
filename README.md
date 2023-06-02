@@ -126,7 +126,7 @@ You can also use  `ReCaptcha::recaptchaApiJsScriptTag($formId)`.  `$formId`  is 
 
 After you have to insert  `recaptchaHtmlFormSnippet()`  helper inside the form where you want to use the field  `g-recaptcha-response`.
 
-You can also use  `ReCaptcha::recaptchaHtmlFormSnippet()`  .
+You can also use  `ReCaptcha::htmlFormSnippet()`  .
 
 ```blade
 <form>
@@ -143,7 +143,7 @@ After you have to insert  `recaptchaHtmlFormButton($buttonInnerHTML)`  helper in
 
 This function creates submit button therefore you don't have to insert  `<input type="submit">`  or similar.
 
-You can also use  `ReCaptcha::recaptchaHtmlFormButton($buttonInnerHTML)`  .
+You can also use  `ReCaptcha::htmlFormButton($buttonInnerHTML)`  .
 
 `$buttonInnerHTML`  is what you want to write on the submit button
 

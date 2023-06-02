@@ -8,7 +8,7 @@
 namespace ZanySoft\ReCaptcha\app\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use ZanySoft\ReCaptcha\Service\ReCaptchaV3;
+use ZanySoft\ReCaptcha\ReCaptcha;
 
 class ReCaptchaController extends Controller
 {
@@ -23,7 +23,7 @@ class ReCaptchaController extends Controller
             //...
         }
 
-        $recaptcha = new ReCaptchaV3(config('recaptcha.site_key'), config('recaptcha.secret_key'), config('recaptcha.lang'));
+        $recaptcha = new ReCaptcha();
 
         if ($recaptcha->skipByIp()) {
             // Add 'skip_by_ip' field to response
@@ -34,43 +34,21 @@ class ReCaptchaController extends Controller
             ];
         }
 
-        $params = http_build_query([
-            'secret' => $recaptcha->getSecretKey(),
-            'remoteip' => request()->getClientIp(),
-            'response' => $token,
-        ]);
-
-        $url = $recaptcha->getApiUrl() . '?' . $params;
-
-        if (function_exists('curl_version')) {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-            if (strpos(strtolower($url), 'https://') !== false) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            }
-            $buffer = curl_exec($ch);
-            $error = curl_error($ch);
-            curl_close($ch);
-
-            if (!$buffer) {
-                // Add 'error' field to response
-                return [
-                    'error' => $error,
-                    'score' => 0.1,
-                    'success' => false,
-                ];
-            }
-        } else {
-            $buffer = file_get_contents($url);
+        if (!$token) {
+            return [
+                'error' => 'Invalid token',
+                'score' => 0.1,
+                'success' => false,
+            ];
         }
 
-        if (is_null($buffer) || empty($buffer)) {
-            // Add 'error' field to response
+        $response = $recaptcha->validateToken($token);
+
+        $buffer = $response['buffer'] ?? null;
+
+        if (!$buffer) {
             return [
-                'error' => 'cURL response empty',
+                'error' => $response['error'] ?? 'cURL response empty',
                 'score' => 0.1,
                 'success' => false,
             ];

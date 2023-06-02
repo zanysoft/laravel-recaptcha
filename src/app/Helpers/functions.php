@@ -9,7 +9,7 @@ use ZanySoft\ReCaptcha\Facades\ReCaptcha;
 
 if (!function_exists('recaptcha')) {
     /**
-     * @return ZanySoft\ReCaptcha\Service\ReCaptcha
+     * @return ZanySoft\ReCaptcha\ReCaptcha
      */
     function recaptcha()
     {
@@ -17,60 +17,53 @@ if (!function_exists('recaptcha')) {
     }
 }
 
-/**
- * Call ReCaptcha::apiJsScriptTag()
- * Write script HTML tag in you HTML code
- * Insert before </head> tag
- *
- * @param $formId required if you are using invisible ReCaptcha
- */
 if (!function_exists('recaptchaApiJsScriptTag')) {
 
     /**
-     * @param string $formId
+     * Call ReCaptcha::apiJsScriptTag()
+     * Write script HTML tag in you HTML code
+     * Insert before </head> tag
      *
+     * @param string|array|null $formId form id is required if you are using invisible ReCaptcha
+     * @param array|null $configuration
      * @return string
      */
-    function recaptchaApiJsScriptTag($formId = ''): string
+    function recaptchaApiJsScriptTag($formId = '', ?array $configuration = []): string
     {
-        return ReCaptcha::apiJsScriptTag($formId);
+        if (is_array($formId)) {
+            $configuration = $formId;
+            $formId = $configuration['formId'] ?? $configuration['form_id'] ?? $configuration['id'] ?? '';
+        }
+        return ReCaptcha::apiJsScriptTag($formId, $configuration);
     }
 }
 
-/**
- * Call ReCaptcha::apiJsScriptTag()
- * Write script HTML tag in you HTML code
- * Insert before </head> tag
- *
- * @param $formId required if you are using invisible ReCaptcha
- */
 if (!function_exists('recaptchaApiV3JsScriptTag')) {
 
     /**
-     * @param array $config
+     * Call ReCaptcha::apiV3JsScriptTag()
+     * Write script HTML tag in you HTML code
+     * Insert before </head> tag
      *
+     * @param array $config
      * @return string
      */
-    function recaptchaApiV3JsScriptTag($config = []): string
+    function recaptchaApiV3JsScriptTag(?array $config = []): string
     {
         return ReCaptcha::apiV3JsScriptTag($config);
     }
 }
 
-/**
- * Call ReCaptcha::htmlFormButton()
- * Write HTML <button> tag in your HTML code
- * Insert before </form> tag
- *
- * Warning! Using only with ReCAPTCHA INVISIBLE
- *
- * @param $buttonInnerHTML What you want to write on the submit button
- */
 if (!function_exists('recaptchaHtmlFormButton')) {
 
     /**
-     * @param null|string $buttonInnerHTML
+     * Call ReCaptcha::htmlFormButton()
+     * Write HTML <button> tag in your HTML code
+     * Insert before </form> tag
      *
+     * Warning! Using only with ReCAPTCHA INVISIBLE
+     *
+     * @param string $buttonInnerHTML What you want to write on the submit button
      * @return string
      */
     function recaptchaHtmlFormButton(?string $buttonInnerHTML = 'Submit'): string
@@ -79,40 +72,19 @@ if (!function_exists('recaptchaHtmlFormButton')) {
     }
 }
 
-/**
- * Call ReCaptcha::htmlFormSnippet()
- * Write ReCAPTCHA HTML tag in your FORM
- * Insert before </form> tag
- *
- * Warning! Using only with ReCAPTCHA v2
- */
 if (!function_exists('recaptchaHtmlFormSnippet')) {
 
     /**
+     * Call ReCaptcha::htmlFormSnippet()
+     * Write ReCAPTCHA HTML tag in your FORM
+     * Insert before </form> tag
+     *
+     *
+     * @param string|null $id required if you are using v3 ReCaptcha
      * @return string
      */
-    function recaptchaHtmlFormSnippet(): string
+    function recaptchaHtmlFormSnippet(?string $id = null): string
     {
-        return ReCaptcha::htmlFormSnippet();
-    }
-}
-
-/**
- * IETF language tag(s)
- * Example: en-US, pt-BR, fr-CA, ... (Usage of "-" instead of "_")
- */
-if (!function_exists('ietfLangTag')) {
-
-    /**
-     * @param null $locale
-     * @return mixed
-     */
-    function ietfLangTag($locale = null)
-    {
-        if (empty($locale)) {
-            $locale = config('app.locale');
-        }
-
-        return str_replace('_', '-', $locale);
+        return ReCaptcha::htmlFormSnippet($id);
     }
 }

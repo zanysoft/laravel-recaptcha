@@ -8,9 +8,7 @@
 namespace ZanySoft\ReCaptcha\app\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use ZanySoft\ReCaptcha\Service\ReCaptchaInvisible;
-use ZanySoft\ReCaptcha\Service\ReCaptchaV2;
-use ZanySoft\ReCaptcha\Service\ReCaptchaV3;
+use ZanySoft\ReCaptcha\ReCaptcha;
 
 class ReCaptchaRule implements Rule
 {
@@ -26,55 +24,24 @@ class ReCaptchaRule implements Rule
     {
         $value = strip_tags($value);
 
-        $recaptchaClass = '';
-        switch (config('recaptcha.version')) {
-            case 'v3' :
-                $recaptchaClass = ReCaptchaV3::class;
-                break;
-            case 'v2' :
-                $recaptchaClass = ReCaptchaV2::class;
-                break;
-            case 'invisible':
-                $recaptchaClass = ReCaptchaInvisible::class;
-                break;
-        }
-        if (empty($recaptchaClass)) return false;
+        $version = config('recaptcha.version');
 
-        $recaptcha = new $recaptchaClass(config('recaptcha.site_key'), config('recaptcha.secret_key'), config('recaptcha.lang'));
+        if (empty($version)) return false;
+
+        $recaptcha = new ReCaptcha();
 
         if ($recaptcha->skipByIp()) {
             return true;
         }
 
-        $params = http_build_query([
-            'secret' => $recaptcha->getSecretKey(),
-            'remoteip' => request()->getClientIp(),
-            'response' => $value,
-        ]);
-
-        $url = $recaptcha->getApiUrl() . '?' . $params;
-
-        if (function_exists('curl_version')) {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_HEADER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-            if (strpos(strtolower($url), 'https://') !== false) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            }
-            $buffer = curl_exec($ch);
-            $error = curl_error($ch);
-            curl_close($ch);
-
-            if (!$buffer) {
-                return false;
-            }
-        } else {
-            $buffer = file_get_contents($url);
+        if (!$value) {
+            return false;
         }
 
-        if (is_null($buffer) || empty($buffer)) {
+        $response = $recaptcha->validateToken($value);
+        $buffer = $response['buffer'] ?? null;
+
+        if (!$buffer || is_null($buffer) || empty($buffer)) {
             return false;
         }
 
